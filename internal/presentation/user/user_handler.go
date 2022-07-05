@@ -55,7 +55,7 @@ func (u userHandler) FindByUUID(c *gin.Context) {
 		return
 	}
 	if user == (models.User{}) {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": "user not found"})
+		c.JSON(http.StatusNotFound, gin.H{"Error": models.UserNotFound})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"User": user})
@@ -69,7 +69,7 @@ func (u userHandler) FindByUsername(c *gin.Context) {
 		return
 	}
 	if user == (models.User{}) {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": errors.New(models.UserNotFound)})
+		c.JSON(http.StatusNotFound, gin.H{"Error": errors.New(models.UserNotFound)})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"User": user})
@@ -94,7 +94,7 @@ func (u userHandler) Update(c *gin.Context) {
 		return
 	}
 	if user == (models.User{}) {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": errors.New("user not found")})
+		c.JSON(http.StatusNotFound, gin.H{"Error": errors.New(models.UserNotFound)})
 		return
 	}
 	user.Username = userDto.Username
