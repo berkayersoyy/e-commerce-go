@@ -8,9 +8,7 @@ import (
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/twinj/uuid"
 	"net/http"
-	"time"
 )
 
 //userHandler User handler
@@ -19,26 +17,19 @@ type userHandler struct {
 }
 
 func (u userHandler) Insert(c *gin.Context) {
-	var user dto.CreateUserDto
-	err := c.BindJSON(&user)
+	var userDto dto.CreateUserDto
+	err := c.BindJSON(&userDto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
 	validate := validator.New()
-	err = validate.Struct(user)
+	err = validate.Struct(userDto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
-	userToAdd := models.User{
-		UUID:      uuid.NewV4().String(),
-		Username:  user.Username,
-		Password:  user.Password,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		DeletedAt: nil,
-	}
+	userToAdd := dto.ToUser(userDto)
 	err = u.userService.Insert(c, userToAdd)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
