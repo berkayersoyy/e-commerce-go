@@ -91,7 +91,7 @@ func (p *productHandler) DeleteProduct(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
-//ProvideProductAPI Provide product api
-func ProvideProductAPI(p services.ProductService) handlers.ProductHandler {
+//ProvideProductHandler Provide product api
+func ProvideProductHandler(p services.ProductService) handlers.ProductHandler {
 	return &productHandler{ProductService: p}
 }

@@ -20,11 +20,6 @@ type userRepository struct {
 	client  *dynamodb.DynamoDB
 }
 
-//ProvideUserRepository Provide user repository
-func ProvideUserRepository(session *session.Session, Timeout time.Duration) repositories.UserRepository {
-	return userRepository{Timeout: Timeout, client: dynamodb.New(session)}
-}
-
 func (u userRepository) Insert(ctx context.Context, user models.User) error {
 	c, cancel := context.WithTimeout(ctx, u.Timeout)
 	defer cancel()
@@ -245,4 +240,9 @@ func New() (*session.Session, error) {
 			Profile: os.Getenv("DynamoDBPROFILE"),
 		},
 	)
+}
+
+//ProvideUserRepository Provide user repository
+func ProvideUserRepository(session *session.Session, timeout time.Duration) repositories.UserRepository {
+	return userRepository{Timeout: timeout, client: dynamodb.New(session)}
 }
