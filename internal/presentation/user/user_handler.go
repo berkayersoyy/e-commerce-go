@@ -69,7 +69,7 @@ func (u userHandler) FindByUsername(c *gin.Context) {
 		return
 	}
 	if user == (models.User{}) {
-		c.JSON(http.StatusBadRequest, gin.H{"Error": errors.New(handlers.UserNotFound)})
+		c.JSON(http.StatusBadRequest, gin.H{"Error": errors.New(models.UserNotFound)})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"User": user})
