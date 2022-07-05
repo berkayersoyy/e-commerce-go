@@ -3,9 +3,9 @@ package user
 import (
 	"errors"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/handlers"
+	"github.com/berkayersoyy/e-commerce-go/internal/domain/handlers/dto"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
-	"github.com/berkayersoyy/e-commerce-go/internal/presentation/user/dto"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/twinj/uuid"
