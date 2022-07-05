@@ -243,6 +243,10 @@ func New() (*session.Session, error) {
 }
 
 //ProvideUserRepository Provide user repository
-func ProvideUserRepository(session *session.Session, timeout time.Duration) repositories.UserRepository {
-	return userRepository{Timeout: timeout, client: dynamodb.New(session)}
+func ProvideUserRepository(timeout time.Duration) repositories.UserRepository {
+	ses, err := New()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return userRepository{Timeout: timeout, client: dynamodb.New(ses)}
 }
