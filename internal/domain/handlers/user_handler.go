@@ -2,6 +2,7 @@ package handlers
 
 import "github.com/gin-gonic/gin"
 
+//UserHandler User handler
 type UserHandler interface {
 	Update(c *gin.Context)
 	FindByUUID(c *gin.Context)

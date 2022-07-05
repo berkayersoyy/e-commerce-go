@@ -7,6 +7,7 @@ import (
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
 )
 
+//userService user Service
 type userService struct {
 	UserRepository repositories.UserRepository
 }
@@ -55,7 +56,7 @@ func (u userService) CreateTable(ctx context.Context) error {
 	return nil
 }
 
-//ProvideUserService Provide user service via dynamodb
+//ProvideUserService Provide user service
 func ProvideUserService(u repositories.UserRepository) services.UserService {
 	return userService{UserRepository: u}
 }

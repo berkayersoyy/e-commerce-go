@@ -5,7 +5,7 @@ import (
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 )
 
-//UserService User_service_dynamodb
+//UserService User service
 type UserService interface {
 	Update(ctx context.Context, user models.User) error
 	FindByUUID(ctx context.Context, id string) (models.User, error)

@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-//userHandler User handler dynamodb
+//userHandler User handler
 type userHandler struct {
 	userService services.UserService
 }

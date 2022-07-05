@@ -5,7 +5,7 @@ import (
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 )
 
-//UserRepository User_repository
+//UserRepository User repository
 type UserRepository interface {
 	Update(ctx context.Context, user models.User) error
 	FindByUUID(ctx context.Context, id string) (models.User, error)
