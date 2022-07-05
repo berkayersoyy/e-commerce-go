@@ -5,6 +5,7 @@ import (
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 )
 
+//ProductRepository Product repository
 type ProductRepository interface {
 	GetAllProducts(c context.Context) []models.Product
 	GetProductByID(c context.Context, id uint) models.Product
