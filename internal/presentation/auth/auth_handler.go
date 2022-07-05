@@ -17,11 +17,6 @@ type authHandler struct {
 	UserService services.UserService
 }
 
-//ProvideAuthAPI Provide auth api
-func ProvideAuthAPI(a services.AuthService, u services.UserService) handlers.AuthHandler {
-	return &authHandler{AuthService: a, UserService: u}
-}
-
 func (a *authHandler) Login(c *gin.Context) {
 	var u models.User
 	if err := c.ShouldBindJSON(&u); err != nil {
@@ -132,4 +127,9 @@ func (a *authHandler) Logout(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusCreated, "Successfully logged out")
+}
+
+//ProvideAuthHandler Provide auth api
+func ProvideAuthHandler(a services.AuthService, u services.UserService) handlers.AuthHandler {
+	return &authHandler{AuthService: a, UserService: u}
 }
