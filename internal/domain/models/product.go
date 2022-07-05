@@ -2,6 +2,10 @@ package models
 
 import "github.com/jinzhu/gorm"
 
+const (
+	ProductNotFound = "product not found"
+)
+
 type Product struct {
 	gorm.Model
 	Name        string  `json:"name" validate:"required,min=5,max=45"`
