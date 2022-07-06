@@ -17,6 +17,22 @@ type authHandler struct {
 	UserService services.UserService
 }
 
+// @BasePath /api/v1
+
+// Login
+// @Summary Login
+// @Schemes
+// @Description Login
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param user body models.User true "User login model"
+// @Success 200 {string} string
+// @Failure 500 {string} string
+// @Failure 400 {string} string
+// @Failure 404 {string} string
+// @Security bearerAuth
+// @Router /v1/login/ [post]
 func (a *authHandler) Login(c *gin.Context) {
 	var u models.User
 	if err := c.ShouldBindJSON(&u); err != nil {

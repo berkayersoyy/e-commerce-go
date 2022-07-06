@@ -16,6 +16,21 @@ type userHandler struct {
 	userService services.UserService
 }
 
+// @BasePath /api/v1
+
+// Insert
+// @Summary Add user
+// @Schemes
+// @Description Add user
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param user body dto.CreateUserDto true "User"
+// @Success 200 {object} models.User
+// @Failure 500 {string} string
+// @Failure 400 {string} string
+// @Failure 404 {string} string
+// @Router /v1/users/ [post]
 func (u userHandler) Insert(c *gin.Context) {
 	var userDto dto.CreateUserDto
 	err := c.BindJSON(&userDto)
@@ -38,6 +53,21 @@ func (u userHandler) Insert(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
+// @BasePath /api/v1
+
+// FindByUUID
+// @Summary Find user
+// @Schemes
+// @Description Find user by uuid
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param uuid path string true "User UUID"
+// @Success 200 {object} models.User
+// @Failure 500 {string} string
+// @Failure 400 {string} string
+// @Failure 404 {string} string
+// @Router /v1/users/getbyuuid/{uuid} [get]
 func (u userHandler) FindByUUID(c *gin.Context) {
 	id := c.Param("uuid")
 	user, err := u.userService.FindByUUID(c, id)
@@ -52,6 +82,21 @@ func (u userHandler) FindByUUID(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"User": user})
 }
 
+// @BasePath /api/v1
+
+// FindByUsername
+// @Summary Find user
+// @Schemes
+// @Description Find user by username
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param username path string true "User Username"
+// @Success 200 {object} models.User
+// @Failure 500 {string} string
+// @Failure 400 {string} string
+// @Failure 404 {string} string
+// @Router /v1/users/getbyusername/{username} [get]
 func (u userHandler) FindByUsername(c *gin.Context) {
 	username := c.Param("username")
 	user, err := u.userService.FindByUsername(c, username)
@@ -66,6 +111,21 @@ func (u userHandler) FindByUsername(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"User": user})
 }
 
+// @BasePath /api/v1
+
+// Update
+// @Summary Update user
+// @Schemes
+// @Description Update user
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param user body dto.CreateUserDto true "User Dto"
+// @Success 200 {string} string
+// @Failure 500 {string} string
+// @Failure 400 {string} string
+// @Failure 404 {string} string
+// @Router /v1/users/ [put]
 func (u userHandler) Update(c *gin.Context) {
 	var userDto dto.UpdateUserDto
 	err := c.BindJSON(&userDto)
@@ -98,6 +158,21 @@ func (u userHandler) Update(c *gin.Context) {
 	c.Status(http.StatusCreated)
 }
 
+// @BasePath /api/v1
+
+// Delete
+// @Summary Delete user
+// @Schemes
+// @Description Delete user
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path string true "User UUID"
+// @Success 200 {string} string
+// @Failure 500 {string} string
+// @Failure 400 {string} string
+// @Failure 404 {string} string
+// @Router /v1/users/{id} [delete]
 func (u userHandler) Delete(c *gin.Context) {
 	id := c.Param("uuid")
 	err := u.userService.Delete(c, id)
