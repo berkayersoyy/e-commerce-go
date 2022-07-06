@@ -38,11 +38,6 @@ func (p *productRepository) DeleteProduct(c context.Context, product models.Prod
 	p.DB.Delete(&product)
 }
 
-//mysqlClient Mysql client
-type mysql struct {
-	Client *gorm.DB
-}
-
 //initDb Init db
 func initDb() *gorm.DB {
 	dsn := os.Getenv("MYSQL_DSN")
