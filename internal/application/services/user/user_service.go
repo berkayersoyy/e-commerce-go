@@ -26,12 +26,12 @@ func (u userService) FindByUUID(ctx context.Context, uuid string) (models.User, 
 	}
 	return user, nil
 }
-func (u userService) FindByUsername(ctx context.Context, username string) (models.User, error) {
-	user, err := u.UserRepository.FindByUsername(ctx, username)
+func (u userService) FindByUsername(ctx context.Context, username string) ([]models.User, error) {
+	users, err := u.UserRepository.FindByUsername(ctx, username)
 	if err != nil {
-		return models.User{}, err
+		return []models.User{}, err
 	}
-	return user, nil
+	return users, nil
 }
 
 func (u userService) Insert(ctx context.Context, user models.User) error {

@@ -3,16 +3,21 @@ package main
 import (
 	"context"
 	"fmt"
+	_ "github.com/berkayersoyy/e-commerce-go/docs"
 	authService "github.com/berkayersoyy/e-commerce-go/internal/application/services/auth"
 	productService "github.com/berkayersoyy/e-commerce-go/internal/application/services/product"
 	userService "github.com/berkayersoyy/e-commerce-go/internal/application/services/user"
 	productRepository "github.com/berkayersoyy/e-commerce-go/internal/infrastructure/repositories/product"
 	userRepository "github.com/berkayersoyy/e-commerce-go/internal/infrastructure/repositories/user"
 	authHandler "github.com/berkayersoyy/e-commerce-go/internal/presentation/auth"
+	"github.com/berkayersoyy/e-commerce-go/internal/presentation/middlewares"
 	productHandler "github.com/berkayersoyy/e-commerce-go/internal/presentation/product"
 	userHandler "github.com/berkayersoyy/e-commerce-go/internal/presentation/user"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/sethvargo/go-retry"
 	"log"
 	"time"
@@ -36,12 +41,13 @@ func setup(ctx context.Context) *gin.Engine {
 	}
 
 	authSvc := authService.ProvideAuthService()
-	authAPI := authHandler.ProvideAuthHandler(authSvc, userSvc)
+	authApi := authHandler.ProvideAuthHandler(authSvc, userSvc)
 
 	router := gin.Default()
 
 	//products
 	products := router.Group("/v1")
+	products.Use(middlewares.AuthorizeJWTMiddleware(authSvc))
 
 	products.GET("/products", productApi.GetAllProducts)
 	products.POST("/products", productApi.AddProduct)
@@ -49,15 +55,17 @@ func setup(ctx context.Context) *gin.Engine {
 	products.DELETE("/products/:id", productApi.DeleteProduct)
 	products.PUT("/products/:id", productApi.UpdateProduct)
 
-	usersDynamoDb := router.Group("/v1/dynamodb")
+	usersDynamoDb := router.Group("/v1")
 	usersDynamoDb.GET("/users/getbyuuid/:uuid", userApi.FindByUUID)
 	usersDynamoDb.GET("/users/getbyusername/:username", userApi.FindByUsername)
 	usersDynamoDb.POST("/users", userApi.Insert)
-	usersDynamoDb.DELETE("/users/:id", userApi.Delete)
+	usersDynamoDb.DELETE("/users/:uuid", userApi.Delete)
 	usersDynamoDb.PUT("/users", userApi.Update)
 
 	auth := router.Group("/v1")
-	auth.POST("/login", authAPI.Login)
+	auth.POST("/login", authApi.Login)
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return router
 }

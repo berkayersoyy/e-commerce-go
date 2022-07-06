@@ -72,8 +72,8 @@ func (p *productHandler) GetProductByID(c *gin.Context) {
 // @Tags Products
 // @Accept json
 // @Produce json
-// @Param product body models.Product true "Product"
-// @Success 200 {object} dto.CreateProductDto
+// @Param product body dto.CreateProductDto true "Product"
+// @Success 200 {object} models.Product
 // @Failure 500 {string} string
 // @Failure 400 {string} string
 // @Failure 404 {string} string

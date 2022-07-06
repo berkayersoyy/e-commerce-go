@@ -38,7 +38,8 @@ func (u userRepository) Insert(ctx context.Context, user models.User) error {
 		TableName: aws.String("Users"),
 		Item:      item,
 		ExpressionAttributeNames: map[string]*string{
-			"#UUID": aws.String("UUID"),
+			"#UUID":     aws.String("UUID"),
+			"#Username": aws.String("Username"),
 		},
 		ConditionExpression: aws.String("attribute_not_exists(#UUID) and attribute_not_exists(#Username)"),
 	}
@@ -82,7 +83,7 @@ func (u userRepository) FindByUUID(ctx context.Context, id string) (models.User,
 	}
 	return user, nil
 }
-func (u userRepository) FindByUsername(ctx context.Context, username string) (models.User, error) {
+func (u userRepository) FindByUsername(ctx context.Context, username string) ([]models.User, error) {
 	c, cancel := context.WithTimeout(ctx, u.Timeout)
 	defer cancel()
 
@@ -97,27 +98,27 @@ func (u userRepository) FindByUsername(ctx context.Context, username string) (mo
 	res, err := u.client.ScanWithContext(c, input)
 	if err != nil {
 		log.Println(err)
-		return models.User{}, err
+		return []models.User{}, err
 	}
 
 	if *res.Count == 0 {
-		return models.User{}, err
+		return []models.User{}, err
 	}
 
-	var user models.User
+	var users []models.User
 	for _, userItem := range res.Items {
 		var userToScan models.User
 		err := dynamodbattribute.UnmarshalMap(userItem, &userToScan)
 		if err != nil {
 			log.Println(err)
-			return models.User{}, err
+			return users, err
 		}
 		if userToScan.Username != username {
 			continue
 		}
-		user = userToScan
+		users = append(users, userToScan)
 	}
-	return user, nil
+	return users, nil
 }
 
 func (u userRepository) Delete(ctx context.Context, uuid string) error {

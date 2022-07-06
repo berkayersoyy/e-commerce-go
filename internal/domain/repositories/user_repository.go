@@ -11,6 +11,6 @@ type UserRepository interface {
 	FindByUUID(ctx context.Context, id string) (models.User, error)
 	Insert(ctx context.Context, user models.User) error
 	Delete(ctx context.Context, id string) error
-	FindByUsername(ctx context.Context, username string) (models.User, error)
+	FindByUsername(ctx context.Context, username string) ([]models.User, error)
 	CreateTable(ctx context.Context) error
 }

@@ -104,10 +104,6 @@ func (u userHandler) FindByUsername(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
-	if user == (models.User{}) {
-		c.JSON(http.StatusNotFound, gin.H{"Error": errors.New(models.UserNotFound)})
-		return
-	}
 	c.JSON(http.StatusOK, gin.H{"User": user})
 }
 
@@ -120,7 +116,7 @@ func (u userHandler) FindByUsername(c *gin.Context) {
 // @Tags Users
 // @Accept json
 // @Produce json
-// @Param user body dto.CreateUserDto true "User Dto"
+// @Param user body dto.UpdateUserDto true "User Dto"
 // @Success 200 {string} string
 // @Failure 500 {string} string
 // @Failure 400 {string} string
