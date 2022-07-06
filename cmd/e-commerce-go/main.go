@@ -8,6 +8,7 @@ import (
 	categoryService "github.com/berkayersoyy/e-commerce-go/internal/application/services/category"
 	productService "github.com/berkayersoyy/e-commerce-go/internal/application/services/product"
 	userService "github.com/berkayersoyy/e-commerce-go/internal/application/services/user"
+	"github.com/joho/godotenv"
 
 	categoryRepository "github.com/berkayersoyy/e-commerce-go/internal/infrastructure/repositories/category"
 	productRepository "github.com/berkayersoyy/e-commerce-go/internal/infrastructure/repositories/product"
@@ -60,11 +61,13 @@ func setup(ctx context.Context) *gin.Engine {
 	products.Use(middlewares.AuthorizeJWTMiddleware(authSvc))
 
 	products.GET("", productApi.GetAllProducts)
+	products.GET("/getbycategoryid/:id", productApi.GetProductByCategoryID)
 	products.POST("", productApi.AddProduct)
 	products.GET("/:id", productApi.GetProductByID)
 	products.DELETE("/:id", productApi.DeleteProduct)
 	products.PUT("/:id", productApi.UpdateProduct)
 
+	//users
 	users := router.Group("/v1/users")
 	users.GET("/getbyuuid/:uuid", userApi.FindByUUID)
 	users.GET("/getbyusername/:username", userApi.FindByUsername)
@@ -72,7 +75,9 @@ func setup(ctx context.Context) *gin.Engine {
 	users.DELETE("/:uuid", userApi.Delete)
 	users.PUT("", userApi.Update)
 
+	//categories
 	categories := router.Group("/v1/categories")
+	categories.Use(middlewares.AuthorizeJWTMiddleware(authSvc))
 	categories.GET("", categoryApi.GetAllCategories)
 	categories.POST("", categoryApi.AddCategory)
 	categories.GET("/:id", categoryApi.GetCategoryByID)
@@ -87,9 +92,21 @@ func setup(ctx context.Context) *gin.Engine {
 	return router
 }
 
+// @title e-commerce-go swagger
+// @version 1.0
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @schemes http
 func main() {
+
 	fmt.Printf("Version: %s", version)
 	ctx := context.TODO()
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	r := setup(ctx)
 	if err := retry.Fibonacci(ctx, 1*time.Second, func(ctx context.Context) error {
