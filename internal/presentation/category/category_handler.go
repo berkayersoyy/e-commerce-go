@@ -23,7 +23,7 @@ type categoryHandler struct {
 // @Summary Fetch all categories
 // @Schemes
 // @Description Fetch all categories
-// @Tags Products
+// @Tags Categories
 // @Accept json
 // @Produce json
 // @Success 200 {object} models.Category
@@ -43,7 +43,7 @@ func (p *categoryHandler) GetAllCategories(c *gin.Context) {
 // @Summary Fetch category by id
 // @Schemes
 // @Description Fetch category by id
-// @Tags Products
+// @Tags Categories
 // @Accept json
 // @Produce json
 // @Param id path string true "Category ID"
@@ -69,10 +69,10 @@ func (p *categoryHandler) GetCategoryByID(c *gin.Context) {
 // @Summary Add Category
 // @Schemes
 // @Description Add Category
-// @Tags Products
+// @Tags Categories
 // @Accept json
 // @Produce json
-// @Param product body dto.CreateCategoryDto true "Category"
+// @Param category body dto.CreateCategoryDto true "Category"
 // @Success 200 {object} models.Category
 // @Failure 500 {string} string
 // @Failure 400 {string} string
@@ -104,10 +104,10 @@ func (p *categoryHandler) AddCategory(c *gin.Context) {
 // @Summary Update Category
 // @Schemes
 // @Description Update Category
-// @Tags Products
+// @Tags Categories
 // @Accept json
 // @Produce json
-// @Param product body dto.UpdateCategoryDto true "Category Dto"
+// @Param category body dto.UpdateCategoryDto true "Category Dto"
 // @Success 200 {string} string
 // @Failure 500 {string} string
 // @Failure 400 {string} string
@@ -146,7 +146,7 @@ func (p *categoryHandler) UpdateCategory(c *gin.Context) {
 // @Summary Delete Category
 // @Schemes
 // @Description Delete Category
-// @Tags Products
+// @Tags Categories
 // @Accept json
 // @Produce json
 // @Param id path string true "Category ID"

@@ -26,7 +26,7 @@ type authHandler struct {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param user body models.User true "User login model"
+// @Param user login model body models.User true "User login model"
 // @Success 200 {string} string
 // @Failure 500 {string} string
 // @Failure 400 {string} string
@@ -44,16 +44,16 @@ func (a *authHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusNotFound, "Cannot find user")
 		return
 	}
-	if user.Username != u.Username || user.Password != u.Password {
+	if user[0].Username != u.Username || user[0].Password != u.Password {
 		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
 		return
 	}
-	ts, err := a.AuthService.CreateToken(user.UUID)
+	ts, err := a.AuthService.CreateToken(user[0].UUID)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, err.Error())
 		return
 	}
-	saveErr := a.AuthService.CreateAuth(user.UUID, ts)
+	saveErr := a.AuthService.CreateAuth(user[0].UUID, ts)
 	if saveErr != nil {
 		c.JSON(http.StatusUnprocessableEntity, saveErr.Error())
 	}
