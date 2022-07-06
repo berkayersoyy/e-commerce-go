@@ -8,5 +8,5 @@ const (
 
 type Category struct {
 	gorm.Model
-	Name string `json:"name" validate:"required,min=5,max=45"`
+	Name string `json:"name" validate:"required,min=2,max=45"`
 }
