@@ -29,6 +29,12 @@ func (p *productRepository) GetProductByID(c context.Context, id uint) models.Pr
 	return product
 }
 
+func (p *productRepository) GetProductByCategoryID(c context.Context, id uint) []models.Product {
+	var products []models.Product
+	p.DB.Where("category_id = ?", id).Find(&products)
+	return products
+}
+
 func (p *productRepository) AddProduct(c context.Context, product models.Product) models.Product {
 	p.DB.Save(&product)
 	return product

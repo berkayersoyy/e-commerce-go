@@ -20,6 +20,10 @@ func (p *productService) GetProductByID(c context.Context, id uint) models.Produ
 	return p.ProductRepository.GetProductByID(c, id)
 }
 
+func (p *productService) GetProductByCategoryID(c context.Context, id uint) []models.Product {
+	return p.ProductRepository.GetProductByCategoryID(c, id)
+}
+
 func (p *productService) AddProduct(c context.Context, product models.Product) models.Product {
 	p.ProductRepository.AddProduct(c, product)
 	return product

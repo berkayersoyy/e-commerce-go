@@ -11,4 +11,5 @@ type ProductRepository interface {
 	GetProductByID(c context.Context, id uint) models.Product
 	AddProduct(c context.Context, product models.Product) models.Product
 	DeleteProduct(c context.Context, product models.Product)
+	GetProductByCategoryID(c context.Context, id uint) []models.Product
 }

@@ -65,6 +65,33 @@ func (p *productHandler) GetProductByID(c *gin.Context) {
 
 // @BasePath /api/v1
 
+// GetProductByCategoryID
+// @Summary Fetch product by category id
+// @Schemes
+// @Description Fetch product by category id
+// @Tags Products
+// @Accept json
+// @Produce json
+// @Param id path string true "Category ID"
+// @Success 200 {object} models.Product
+// @Failure 500 {string} string
+// @Failure 400 {string} string
+// @Failure 404 {string} string
+// @Security bearerAuth
+// @Router /v1/products/getbycategoryid/{id} [get]
+func (p *productHandler) GetProductByCategoryID(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	products := p.ProductService.GetProductByCategoryID(c, uint(id))
+	if products == nil {
+		c.JSON(http.StatusNotFound, gin.H{"Error": errors.New(models.ProductNotFound)})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"product": products})
+
+}
+
+// @BasePath /api/v1
+
 // AddProduct
 // @Summary Add Product
 // @Schemes
