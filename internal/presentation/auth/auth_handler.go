@@ -26,19 +26,20 @@ type authHandler struct {
 // @Tags Auth
 // @Accept json
 // @Produce json
-// @Param user login model body models.User true "User login model"
+// @Param user login model body dto.UserLoginModel true "User login model"
 // @Success 200 {string} string
 // @Failure 500 {string} string
 // @Failure 400 {string} string
 // @Failure 404 {string} string
 // @Security bearerAuth
-// @Router /v1/login/ [post]
+// @Router /v1/auth/login/ [post]
 func (a *authHandler) Login(c *gin.Context) {
 	var u models.User
 	if err := c.ShouldBindJSON(&u); err != nil {
 		c.JSON(http.StatusUnprocessableEntity, "Invalid json provided")
 		return
 	}
+
 	user, err := a.UserService.FindByUsername(c, u.Username)
 	if err != nil {
 		c.JSON(http.StatusNotFound, "Cannot find user")

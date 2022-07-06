@@ -19,7 +19,12 @@ type CreateUserDto struct {
 	Password string `json:"password" validate:"required"`
 }
 
-func ToUser(userDto CreateUserDto) models.User {
+type UserLoginModel struct {
+	Username string `json:"username" validate:"required"`
+	Password string `json:"password" validate:"required"`
+}
+
+func CreateToUser(userDto CreateUserDto) models.User {
 	return models.User{
 		UUID:      uuid.NewV4().String(),
 		Username:  userDto.Username,

@@ -44,7 +44,7 @@ func (u userHandler) Insert(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
-	userToAdd := dto.ToUser(userDto)
+	userToAdd := dto.CreateToUser(userDto)
 	err = u.userService.Insert(c, userToAdd)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
