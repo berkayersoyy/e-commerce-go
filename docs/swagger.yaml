@@ -41,6 +41,18 @@ definitions:
     - name
     - price
     type: object
+  dto.UpdateUserDto:
+    properties:
+      UUID:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   models.Product:
     properties:
       createdAt:
@@ -85,179 +97,13 @@ definitions:
 info:
   contact: {}
 paths:
-  /v1/dynamodb/users/:
-    post:
-      consumes:
-      - application/json
-      description: Add user
-      parameters:
-      - description: User ID
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateUserDto'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "404":
-          description: Not Found
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Add user
-      tags:
-      - Users
-    put:
-      consumes:
-      - application/json
-      description: Update user
-      parameters:
-      - description: User ID
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/dto.CreateUserDto'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "404":
-          description: Not Found
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Update user
-      tags:
-      - Users
-  /v1/dynamodb/users/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Delete user
-      parameters:
-      - description: User UUID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "404":
-          description: Not Found
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Delete user
-      tags:
-      - Users
-  /v1/dynamodb/users/getbyusername/{username}:
-    get:
-      consumes:
-      - application/json
-      description: Find user by username
-      parameters:
-      - description: Username
-        in: path
-        name: username
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "404":
-          description: Not Found
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Find user
-      tags:
-      - Users
-  /v1/dynamodb/users/getbyuuid/{uuid}:
-    get:
-      consumes:
-      - application/json
-      description: Find user by uuid
-      parameters:
-      - description: User UUID
-        in: path
-        name: uuid
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-        "400":
-          description: Bad Request
-          schema:
-            type: string
-        "404":
-          description: Not Found
-          schema:
-            type: string
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      summary: Find user
-      tags:
-      - Users
   /v1/login/:
     post:
       consumes:
       - application/json
       description: Login
       parameters:
-      - description: User ID
+      - description: User login model
         in: body
         name: user
         required: true
@@ -321,7 +167,7 @@ paths:
       - application/json
       description: Add Product
       parameters:
-      - description: Product ID
+      - description: Product
         in: body
         name: product
         required: true
@@ -356,7 +202,7 @@ paths:
       - application/json
       description: Update Product
       parameters:
-      - description: Product ID
+      - description: Product Dto
         in: body
         name: product
         required: true
@@ -455,4 +301,170 @@ paths:
       summary: Fetch product by id
       tags:
       - Products
+  /v1/users/:
+    post:
+      consumes:
+      - application/json
+      description: Add user
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateUserDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add user
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Update user
+      parameters:
+      - description: User Dto
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Update user
+      tags:
+      - Users
+  /v1/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete user
+      parameters:
+      - description: User UUID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Delete user
+      tags:
+      - Users
+  /v1/users/getbyusername/{username}:
+    get:
+      consumes:
+      - application/json
+      description: Find user by username
+      parameters:
+      - description: User Username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Find user
+      tags:
+      - Users
+  /v1/users/getbyuuid/{uuid}:
+    get:
+      consumes:
+      - application/json
+      description: Find user by uuid
+      parameters:
+      - description: User UUID
+        in: path
+        name: uuid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Find user
+      tags:
+      - Users
 swagger: "2.0"
