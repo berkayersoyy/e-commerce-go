@@ -1,4 +1,13 @@
 definitions:
+  dto.CreateCategoryDto:
+    properties:
+      name:
+        maxLength: 45
+        minLength: 5
+        type: string
+    required:
+    - name
+    type: object
   dto.CreateProductDto:
     properties:
       description:
@@ -23,6 +32,17 @@ definitions:
     required:
     - password
     - username
+    type: object
+  dto.UpdateCategoryDto:
+    properties:
+      id:
+        type: integer
+      name:
+        maxLength: 45
+        minLength: 5
+        type: string
+    required:
+    - name
     type: object
   dto.UpdateProductDto:
     properties:
@@ -53,8 +73,27 @@ definitions:
     - password
     - username
     type: object
+  models.Category:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      name:
+        maxLength: 45
+        minLength: 5
+        type: string
+      updatedAt:
+        type: string
+    required:
+    - name
+    type: object
   models.Product:
     properties:
+      categoryId:
+        type: integer
       createdAt:
         type: string
       deletedAt:
@@ -72,6 +111,7 @@ definitions:
       updatedAt:
         type: string
     required:
+    - categoryId
     - description
     - name
     - price
@@ -97,6 +137,174 @@ definitions:
 info:
   contact: {}
 paths:
+  /v1/categories/:
+    get:
+      consumes:
+      - application/json
+      description: Fetch all categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: Fetch all categories
+      tags:
+      - Categories
+    post:
+      consumes:
+      - application/json
+      description: Add Category
+      parameters:
+      - description: Category
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCategoryDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: Add Category
+      tags:
+      - Categories
+    put:
+      consumes:
+      - application/json
+      description: Update Category
+      parameters:
+      - description: Category Dto
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateCategoryDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: Update Category
+      tags:
+      - Categories
+  /v1/categories/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Category
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: Delete Category
+      tags:
+      - Categories
+    get:
+      consumes:
+      - application/json
+      description: Fetch category by id
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Category'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: Fetch category by id
+      tags:
+      - Categories
   /v1/login/:
     post:
       consumes:
@@ -105,7 +313,7 @@ paths:
       parameters:
       - description: User login model
         in: body
-        name: user
+        name: model
         required: true
         schema:
           $ref: '#/definitions/models.User'
@@ -172,14 +380,14 @@ paths:
         name: product
         required: true
         schema:
-          $ref: '#/definitions/models.Product'
+          $ref: '#/definitions/dto.CreateProductDto'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.CreateProductDto'
+            $ref: '#/definitions/models.Product'
         "400":
           description: Bad Request
           schema:
