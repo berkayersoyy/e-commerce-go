@@ -5,11 +5,17 @@ import (
 	"fmt"
 	_ "github.com/berkayersoyy/e-commerce-go/docs"
 	authService "github.com/berkayersoyy/e-commerce-go/internal/application/services/auth"
+	categoryService "github.com/berkayersoyy/e-commerce-go/internal/application/services/category"
 	productService "github.com/berkayersoyy/e-commerce-go/internal/application/services/product"
 	userService "github.com/berkayersoyy/e-commerce-go/internal/application/services/user"
+
+	categoryRepository "github.com/berkayersoyy/e-commerce-go/internal/infrastructure/repositories/category"
 	productRepository "github.com/berkayersoyy/e-commerce-go/internal/infrastructure/repositories/product"
+
 	userRepository "github.com/berkayersoyy/e-commerce-go/internal/infrastructure/repositories/user"
 	authHandler "github.com/berkayersoyy/e-commerce-go/internal/presentation/auth"
+	categoryHandler "github.com/berkayersoyy/e-commerce-go/internal/presentation/category"
+
 	"github.com/berkayersoyy/e-commerce-go/internal/presentation/middlewares"
 	productHandler "github.com/berkayersoyy/e-commerce-go/internal/presentation/product"
 	userHandler "github.com/berkayersoyy/e-commerce-go/internal/presentation/user"
@@ -35,6 +41,10 @@ func setup(ctx context.Context) *gin.Engine {
 	userSvc := userService.ProvideUserService(userRepo)
 	userApi := userHandler.ProvideUserHandler(userSvc)
 
+	categoryRepo := categoryRepository.ProvideCategoryRepository()
+	categorySvc := categoryService.ProvideCategoryService(categoryRepo)
+	categoryApi := categoryHandler.ProvideCategoryHandler(categorySvc)
+
 	err := userRepo.CreateTable(ctx)
 	if err != nil {
 		log.Fatalf("Error on creating users table, %s", err)
@@ -46,23 +56,30 @@ func setup(ctx context.Context) *gin.Engine {
 	router := gin.Default()
 
 	//products
-	products := router.Group("/v1")
+	products := router.Group("/v1/products")
 	products.Use(middlewares.AuthorizeJWTMiddleware(authSvc))
 
-	products.GET("/products", productApi.GetAllProducts)
-	products.POST("/products", productApi.AddProduct)
-	products.GET("/products/:id", productApi.GetProductByID)
-	products.DELETE("/products/:id", productApi.DeleteProduct)
-	products.PUT("/products/:id", productApi.UpdateProduct)
+	products.GET("", productApi.GetAllProducts)
+	products.POST("", productApi.AddProduct)
+	products.GET("/:id", productApi.GetProductByID)
+	products.DELETE("/:id", productApi.DeleteProduct)
+	products.PUT("/:id", productApi.UpdateProduct)
 
-	usersDynamoDb := router.Group("/v1")
-	usersDynamoDb.GET("/users/getbyuuid/:uuid", userApi.FindByUUID)
-	usersDynamoDb.GET("/users/getbyusername/:username", userApi.FindByUsername)
-	usersDynamoDb.POST("/users", userApi.Insert)
-	usersDynamoDb.DELETE("/users/:uuid", userApi.Delete)
-	usersDynamoDb.PUT("/users", userApi.Update)
+	users := router.Group("/v1/users")
+	users.GET("/getbyuuid/:uuid", userApi.FindByUUID)
+	users.GET("/getbyusername/:username", userApi.FindByUsername)
+	users.POST("", userApi.Insert)
+	users.DELETE("/:uuid", userApi.Delete)
+	users.PUT("", userApi.Update)
 
-	auth := router.Group("/v1")
+	categories := router.Group("/v1/categories")
+	categories.GET("", categoryApi.GetAllCategories)
+	categories.POST("", categoryApi.AddCategory)
+	categories.GET("/:id", categoryApi.GetCategoryByID)
+	categories.DELETE("/:id", categoryApi.DeleteCategory)
+	categories.PUT("/:id", categoryApi.UpdateCategory)
+
+	auth := router.Group("/v1/auth")
 	auth.POST("/login", authApi.Login)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
