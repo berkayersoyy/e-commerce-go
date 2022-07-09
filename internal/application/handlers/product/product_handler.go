@@ -5,7 +5,7 @@ import (
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/handlers"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/handlers/dto"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
-	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
+	"github.com/berkayersoyy/e-commerce-go/internal/domain/usecases"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -14,7 +14,7 @@ import (
 
 //productHandler Product handler
 type productHandler struct {
-	ProductService services.ProductService
+	ProductService usecases.ProductService
 }
 
 // @BasePath /api/v1
@@ -65,7 +65,7 @@ func (p *productHandler) GetProductByID(c *gin.Context) {
 
 // @BasePath /api/v1
 
-// GetProductByCategoryID
+// GetProductsByCategoryID
 // @Summary Fetch product by category id
 // @Schemes
 // @Description Fetch product by category id
@@ -79,9 +79,9 @@ func (p *productHandler) GetProductByID(c *gin.Context) {
 // @Failure 404 {string} string
 // @Security bearerAuth
 // @Router /v1/products/getbycategoryid/{id} [get]
-func (p *productHandler) GetProductByCategoryID(c *gin.Context) {
+func (p *productHandler) GetProductsByCategoryID(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
-	products := p.ProductService.GetProductByCategoryID(c, uint(id))
+	products := p.ProductService.GetProductsByCategoryID(c, uint(id))
 	if products == nil {
 		c.JSON(http.StatusNotFound, gin.H{"Error": errors.New(models.ProductNotFound)})
 		return
@@ -92,7 +92,7 @@ func (p *productHandler) GetProductByCategoryID(c *gin.Context) {
 
 // @BasePath /api/v1
 
-// AddProduct
+// CreateProduct
 // @Summary Add Product
 // @Schemes
 // @Description Add Product
@@ -106,7 +106,7 @@ func (p *productHandler) GetProductByCategoryID(c *gin.Context) {
 // @Failure 404 {string} string
 // @Security bearerAuth
 // @Router /v1/products/ [post]
-func (p *productHandler) AddProduct(c *gin.Context) {
+func (p *productHandler) CreateProduct(c *gin.Context) {
 	var productDto dto.CreateProductDto
 	err := c.BindJSON(&productDto)
 	if err != nil {
@@ -121,7 +121,7 @@ func (p *productHandler) AddProduct(c *gin.Context) {
 		return
 	}
 	productToAdd := dto.CreateToProduct(productDto)
-	createdProduct := p.ProductService.AddProduct(c, productToAdd)
+	createdProduct := p.ProductService.CreateProduct(c, productToAdd)
 	c.JSON(http.StatusCreated, gin.H{"product": createdProduct})
 }
 
@@ -165,7 +165,7 @@ func (p *productHandler) UpdateProduct(c *gin.Context) {
 	product.Name = productDto.Name
 	product.Price = productDto.Price
 	product.Description = productDto.Description
-	p.ProductService.AddProduct(c, product)
+	p.ProductService.CreateProduct(c, product)
 	c.Status(http.StatusCreated)
 }
 
@@ -198,6 +198,6 @@ func (p *productHandler) DeleteProduct(c *gin.Context) {
 }
 
 //ProvideProductHandler Provide product handler
-func ProvideProductHandler(p services.ProductService) handlers.ProductHandler {
+func ProvideProductHandler(p usecases.ProductService) handlers.ProductHandler {
 	return &productHandler{ProductService: p}
 }

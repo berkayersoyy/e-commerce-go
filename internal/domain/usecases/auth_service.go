@@ -1,4 +1,4 @@
-package services
+package usecases
 
 import (
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"

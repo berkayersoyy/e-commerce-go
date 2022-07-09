@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/handlers"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
-	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
+	"github.com/berkayersoyy/e-commerce-go/internal/domain/usecases"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -13,8 +13,8 @@ import (
 
 //authHandler Auth handler
 type authHandler struct {
-	AuthService services.AuthService
-	UserService services.UserService
+	AuthService usecases.AuthService
+	UserService usecases.UserService
 }
 
 // @BasePath /api/v1
@@ -147,6 +147,6 @@ func (a *authHandler) Logout(c *gin.Context) {
 }
 
 //ProvideAuthHandler Provide auth api
-func ProvideAuthHandler(a services.AuthService, u services.UserService) handlers.AuthHandler {
+func ProvideAuthHandler(a usecases.AuthService, u usecases.UserService) handlers.AuthHandler {
 	return &authHandler{AuthService: a, UserService: u}
 }

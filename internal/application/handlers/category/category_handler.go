@@ -5,7 +5,7 @@ import (
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/handlers"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/handlers/dto"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
-	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
+	"github.com/berkayersoyy/e-commerce-go/internal/domain/usecases"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -14,7 +14,7 @@ import (
 
 //categoryHandler Category handler
 type categoryHandler struct {
-	CategoryService services.CategoryService
+	CategoryService usecases.CategoryService
 }
 
 // @BasePath /api/v1
@@ -65,7 +65,7 @@ func (p *categoryHandler) GetCategoryByID(c *gin.Context) {
 
 // @BasePath /api/v1
 
-// AddCategory
+// CreateCategory
 // @Summary Add Category
 // @Schemes
 // @Description Add Category
@@ -79,7 +79,7 @@ func (p *categoryHandler) GetCategoryByID(c *gin.Context) {
 // @Failure 404 {string} string
 // @Security bearerAuth
 // @Router /v1/categories/ [post]
-func (p *categoryHandler) AddCategory(c *gin.Context) {
+func (p *categoryHandler) CreateCategory(c *gin.Context) {
 	var categoryDto dto.CreateCategoryDto
 	err := c.BindJSON(&categoryDto)
 	if err != nil {
@@ -94,7 +94,7 @@ func (p *categoryHandler) AddCategory(c *gin.Context) {
 		return
 	}
 	categoryToAdd := dto.CreateToCategory(categoryDto)
-	createdProduct := p.CategoryService.AddCategory(c, categoryToAdd)
+	createdProduct := p.CategoryService.CreateCategory(c, categoryToAdd)
 	c.JSON(http.StatusCreated, gin.H{"product": createdProduct})
 }
 
@@ -136,7 +136,7 @@ func (p *categoryHandler) UpdateCategory(c *gin.Context) {
 	}
 
 	category.Name = categoryDto.Name
-	p.CategoryService.AddCategory(c, category)
+	p.CategoryService.CreateCategory(c, category)
 	c.Status(http.StatusCreated)
 }
 
@@ -169,6 +169,6 @@ func (p *categoryHandler) DeleteCategory(c *gin.Context) {
 }
 
 //ProvideCategoryHandler Provide category handler
-func ProvideCategoryHandler(c services.CategoryService) handlers.CategoryHandler {
+func ProvideCategoryHandler(c usecases.CategoryService) handlers.CategoryHandler {
 	return &categoryHandler{CategoryService: c}
 }

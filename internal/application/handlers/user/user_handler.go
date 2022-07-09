@@ -5,7 +5,7 @@ import (
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/handlers"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/handlers/dto"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
-	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
+	"github.com/berkayersoyy/e-commerce-go/internal/domain/usecases"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
@@ -13,7 +13,7 @@ import (
 
 //userHandler User handler
 type userHandler struct {
-	userService services.UserService
+	userService usecases.UserService
 }
 
 // @BasePath /api/v1
@@ -180,6 +180,6 @@ func (u userHandler) Delete(c *gin.Context) {
 }
 
 //ProvideUserHandler Provide user handler dynamodb
-func ProvideUserHandler(u services.UserService) handlers.UserHandler {
+func ProvideUserHandler(u usecases.UserService) handlers.UserHandler {
 	return userHandler{userService: u}
 }
