@@ -19,5 +19,5 @@ type UpdateCategoryDto struct {
 
 //CreateToCategory To category
 func CreateToCategory(categoryDto CreateCategoryDto) models.Category {
-	return models.Category{Name: categoryDto.Name, Model: gorm.Model{CreatedAt: time.Now(), UpdatedAt: time.Now(), DeletedAt: nil}}
+	return models.Category{Name: categoryDto.Name, Model: gorm.Model{UpdatedAt: time.Now(), DeletedAt: nil}}
 }

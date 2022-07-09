@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/repositories"
-	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
+	"github.com/berkayersoyy/e-commerce-go/internal/domain/usecases"
 )
 
 //productService Product service
@@ -20,12 +20,12 @@ func (p *productService) GetProductByID(c context.Context, id uint) models.Produ
 	return p.ProductRepository.GetProductByID(c, id)
 }
 
-func (p *productService) GetProductByCategoryID(c context.Context, id uint) []models.Product {
-	return p.ProductRepository.GetProductByCategoryID(c, id)
+func (p *productService) GetProductsByCategoryID(c context.Context, id uint) []models.Product {
+	return p.ProductRepository.GetProductsByCategoryID(c, id)
 }
 
-func (p *productService) AddProduct(c context.Context, product models.Product) models.Product {
-	p.ProductRepository.AddProduct(c, product)
+func (p *productService) CreateProduct(c context.Context, product models.Product) models.Product {
+	p.ProductRepository.CreateProduct(c, product)
 	return product
 }
 
@@ -34,6 +34,6 @@ func (p *productService) DeleteProduct(c context.Context, product models.Product
 }
 
 // ProvideProductService Provide product service
-func ProvideProductService(p repositories.ProductRepository) services.ProductService {
+func ProvideProductService(p repositories.ProductRepository) usecases.ProductService {
 	return &productService{ProductRepository: p}
 }

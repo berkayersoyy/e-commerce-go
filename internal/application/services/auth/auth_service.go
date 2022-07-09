@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
-	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
+	"github.com/berkayersoyy/e-commerce-go/internal/domain/usecases"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis/v7"
 	"github.com/sethvargo/go-retry"
@@ -186,6 +186,6 @@ func initRedis() *redis.Client {
 }
 
 // ProvideAuthService Provides auth service
-func ProvideAuthService() services.AuthService {
+func ProvideAuthService() usecases.AuthService {
 	return &authService{Client: initRedis()}
 }

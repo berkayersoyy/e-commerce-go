@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/repositories"
-	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
+	"github.com/berkayersoyy/e-commerce-go/internal/domain/usecases"
 )
 
 //categoryService Category service
@@ -20,8 +20,8 @@ func (p *categoryService) GetCategoryByID(c context.Context, id uint) models.Cat
 	return p.CategoryRepository.GetCategoryByID(c, id)
 }
 
-func (p *categoryService) AddCategory(c context.Context, category models.Category) models.Category {
-	p.CategoryRepository.AddCategory(c, category)
+func (p *categoryService) CreateCategory(c context.Context, category models.Category) models.Category {
+	p.CategoryRepository.CreateCategory(c, category)
 	return category
 }
 
@@ -30,6 +30,6 @@ func (p *categoryService) DeleteCategory(c context.Context, category models.Cate
 }
 
 // ProvideCategoryService Provide category service
-func ProvideCategoryService(c repositories.CategoryRepository) services.CategoryService {
+func ProvideCategoryService(c repositories.CategoryRepository) usecases.CategoryService {
 	return &categoryService{CategoryRepository: c}
 }

@@ -8,8 +8,8 @@ import (
 type ProductHandler interface {
 	GetAllProducts(c *gin.Context)
 	GetProductByID(c *gin.Context)
-	AddProduct(c *gin.Context)
+	CreateProduct(c *gin.Context)
 	UpdateProduct(c *gin.Context)
 	DeleteProduct(c *gin.Context)
-	GetProductByCategoryID(c *gin.Context)
+	GetProductsByCategoryID(c *gin.Context)
 }

@@ -13,3 +13,5 @@ type Product struct {
 	CategoryId  uint    `json:"categoryId" validate:"required"`
 	Description string  `json:"description" validate:"required"`
 }
+
+//json incele

@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/repositories"
-	"github.com/berkayersoyy/e-commerce-go/internal/domain/services"
+	"github.com/berkayersoyy/e-commerce-go/internal/domain/usecases"
 )
 
 //userService user Service
@@ -57,6 +57,6 @@ func (u userService) CreateTable(ctx context.Context) error {
 }
 
 //ProvideUserService Provide user service
-func ProvideUserService(u repositories.UserRepository) services.UserService {
+func ProvideUserService(u repositories.UserRepository) usecases.UserService {
 	return userService{UserRepository: u}
 }

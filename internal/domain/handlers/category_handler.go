@@ -8,7 +8,7 @@ import (
 type CategoryHandler interface {
 	GetAllCategories(c *gin.Context)
 	GetCategoryByID(c *gin.Context)
-	AddCategory(c *gin.Context)
+	CreateCategory(c *gin.Context)
 	DeleteCategory(c *gin.Context)
 	UpdateCategory(c *gin.Context)
 }

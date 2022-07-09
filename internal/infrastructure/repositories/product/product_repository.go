@@ -2,14 +2,9 @@ package product
 
 import (
 	"context"
-	"fmt"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/repositories"
 	"github.com/jinzhu/gorm"
-	"github.com/sethvargo/go-retry"
-	"log"
-	"os"
-	"time"
 )
 
 //productRepository Product repository
@@ -29,13 +24,13 @@ func (p *productRepository) GetProductByID(c context.Context, id uint) models.Pr
 	return product
 }
 
-func (p *productRepository) GetProductByCategoryID(c context.Context, id uint) []models.Product {
+func (p *productRepository) GetProductsByCategoryID(c context.Context, id uint) []models.Product {
 	var products []models.Product
 	p.DB.Where("category_id = ?", id).Find(&products)
 	return products
 }
 
-func (p *productRepository) AddProduct(c context.Context, product models.Product) models.Product {
+func (p *productRepository) CreateProduct(c context.Context, product models.Product) models.Product {
 	p.DB.Save(&product)
 	return product
 }
@@ -44,32 +39,7 @@ func (p *productRepository) DeleteProduct(c context.Context, product models.Prod
 	p.DB.Delete(&product)
 }
 
-//initDb Init db
-func initDb() *gorm.DB {
-	dsn := os.Getenv("MYSQL_DSN")
-	ctx := context.Background()
-	var db *gorm.DB
-	var err error
-	if err := retry.Fibonacci(ctx, 1*time.Second, func(ctx context.Context) error {
-		db, err = gorm.Open("mysql", dsn)
-		if err != nil {
-			fmt.Println(err)
-			return retry.RetryableError(err)
-		}
-		return nil
-	}); err != nil {
-		log.Fatal(err)
-	}
-
-	db.DB().SetMaxOpenConns(10)
-	db.DB().SetMaxIdleConns(5)
-
-	db.AutoMigrate(&models.Product{})
-
-	return db
-}
-
 //ProvideProductRepository Provide product repository
-func ProvideProductRepository() repositories.ProductRepository {
-	return &productRepository{DB: initDb()}
+func ProvideProductRepository(db *gorm.DB) repositories.ProductRepository {
+	return &productRepository{DB: db}
 }

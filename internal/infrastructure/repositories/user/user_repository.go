@@ -3,15 +3,12 @@ package user
 import (
 	"context"
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/repositories"
 	"github.com/twinj/uuid"
 	"log"
-	"os"
 	"time"
 )
 
@@ -228,26 +225,7 @@ func (u userRepository) listTables(ctx context.Context) (*dynamodb.ListTablesOut
 	return result, nil
 }
 
-//New Returns new
-func New() (*session.Session, error) {
-	return session.NewSessionWithOptions(
-		session.Options{
-			Config: aws.Config{
-				Credentials:      credentials.NewStaticCredentials(os.Getenv("DynamoDBID"), os.Getenv("DynamoDBSECRET"), ""),
-				Region:           aws.String(os.Getenv("DynamoDBREGION")),
-				S3ForcePathStyle: aws.Bool(true),
-				Endpoint:         aws.String(os.Getenv("DynamoDBENDPOINTURL")),
-			},
-			Profile: os.Getenv("DynamoDBPROFILE"),
-		},
-	)
-}
-
 //ProvideUserRepository Provide user repository
-func ProvideUserRepository(timeout time.Duration) repositories.UserRepository {
-	ses, err := New()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return userRepository{Timeout: timeout, client: dynamodb.New(ses)}
+func ProvideUserRepository(timeout time.Duration, db *dynamodb.DynamoDB) repositories.UserRepository {
+	return userRepository{Timeout: timeout, client: db}
 }

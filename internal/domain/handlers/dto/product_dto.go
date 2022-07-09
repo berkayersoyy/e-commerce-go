@@ -30,5 +30,5 @@ func CreateToProduct(productDto CreateProductDto) models.Product {
 
 //UpdateToProduct To_Product
 func UpdateToProduct(productDto UpdateProductDto) models.Product {
-	return models.Product{Name: productDto.Name, Price: productDto.Price, Description: productDto.Description, CategoryId: productDto.CategoryId, Model: gorm.Model{CreatedAt: time.Now(), UpdatedAt: time.Now(), DeletedAt: nil}}
+	return models.Product{Name: productDto.Name, Price: productDto.Price, Description: productDto.Description, CategoryId: productDto.CategoryId, Model: gorm.Model{UpdatedAt: time.Now(), DeletedAt: nil}}
 }
