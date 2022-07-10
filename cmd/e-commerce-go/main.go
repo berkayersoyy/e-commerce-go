@@ -39,7 +39,7 @@ var version = "dev"
 
 func setup(ctx context.Context) *gin.Engine {
 	//mysql
-	db := providers.InitDb()
+	mysqlDb := providers.NewMysqlDb()
 	dynamoDbSession, err := providers.NewSession()
 	if err != nil {
 		log.Fatal(err)
@@ -47,7 +47,10 @@ func setup(ctx context.Context) *gin.Engine {
 	//dynamodb
 	dynamoDb := providers.NewDynamoDb(dynamoDbSession)
 
-	productRepo := productRepository.ProvideProductRepository(db)
+	//redis
+	redisDb := providers.NewRedisDb()
+
+	productRepo := productRepository.ProvideProductRepository(mysqlDb)
 	productSvc := productService.ProvideProductService(productRepo)
 	productApi := productHandler.ProvideProductHandler(productSvc)
 
@@ -55,14 +58,14 @@ func setup(ctx context.Context) *gin.Engine {
 	userSvc := userService.ProvideUserService(userRepo)
 	userApi := userHandler.ProvideUserHandler(userSvc)
 
-	categoryRepo := categoryRepository.ProvideCategoryRepository(db)
+	categoryRepo := categoryRepository.ProvideCategoryRepository(mysqlDb)
 	categorySvc := categoryService.ProvideCategoryService(categoryRepo)
 	categoryApi := categoryHandler.ProvideCategoryHandler(categorySvc)
 
-	orderItemRepo := orderItemRepository.ProvideOrderItemRepository(db)
+	orderItemRepo := orderItemRepository.ProvideOrderItemRepository(mysqlDb)
 	orderItemSvc := orderItemService.ProvideOrderItemService(orderItemRepo)
 
-	orderRepo := orderRepository.ProvideOrderRepository(db)
+	orderRepo := orderRepository.ProvideOrderRepository(mysqlDb)
 	orderSvc := orderService.ProvideOrderService(orderRepo, productSvc, orderItemSvc)
 	orderApi := orderHandler.ProvideOrderHandler(orderSvc)
 
@@ -71,7 +74,7 @@ func setup(ctx context.Context) *gin.Engine {
 		log.Fatalf("Error on creating users table, %s", err)
 	}
 
-	authSvc := authService.ProvideAuthService()
+	authSvc := authService.ProvideAuthService(redisDb)
 	authApi := authHandler.ProvideAuthHandler(authSvc, userSvc)
 
 	router := gin.Default()

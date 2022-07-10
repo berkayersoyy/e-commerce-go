@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-//InitDb Init db
-func InitDb() *gorm.DB {
+//NewMysqlDb Init db
+func NewMysqlDb() *gorm.DB {
 	dsn := os.Getenv("MYSQL_DSN")
 	ctx := context.Background()
 	var db *gorm.DB

@@ -1,16 +1,13 @@
 package auth
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/models"
 	"github.com/berkayersoyy/e-commerce-go/internal/domain/usecases"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-redis/redis/v7"
-	"github.com/sethvargo/go-retry"
 	"github.com/twinj/uuid"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -166,26 +163,7 @@ func (a *authService) FetchAuth(authD *models.AccessDetails) (uint64, error) {
 	return userID, nil
 }
 
-//initRedis Init redis
-func initRedis() *redis.Client {
-	dsn := os.Getenv("REDIS_HOST")
-	var client *redis.Client
-	ctx := context.Background()
-	if err := retry.Fibonacci(ctx, 1*time.Second, func(ctx context.Context) error {
-		client = redis.NewClient(&redis.Options{
-			Addr: dsn,
-		})
-		if _, err := client.Ping().Result(); err != nil {
-			return retry.RetryableError(err)
-		}
-		return nil
-	}); err != nil {
-		log.Fatal(err)
-	}
-	return client
-}
-
 // ProvideAuthService Provides auth service
-func ProvideAuthService() usecases.AuthService {
-	return &authService{Client: initRedis()}
+func ProvideAuthService(client *redis.Client) usecases.AuthService {
+	return &authService{Client: client}
 }
